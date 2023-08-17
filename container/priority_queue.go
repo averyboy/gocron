@@ -72,3 +72,8 @@ func (pq *PriorityQueue) Popx() (x Comparabler) {
 func (pq *PriorityQueue) Topx() (x Comparabler) {
 	return pq.queue[len(pq.queue)-1]
 }
+
+// Empty
+func (pq *PriorityQueue) Empty() bool {
+	return len(pq.queue) == 0
+}
