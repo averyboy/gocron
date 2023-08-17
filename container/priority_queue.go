@@ -21,7 +21,7 @@ type PriorityQueue struct {
 // InitPq initial a priority queue instance
 func InitPq(comps ...Comparabler) (pq *PriorityQueue) {
 	pq = new(PriorityQueue)
-	pq.queue = make([]Comparabler, 10)
+	pq.queue = make([]Comparabler, 0, 16)
 	pq.queue = append(pq.queue, comps...)
 	pq.self = pq
 	heap.Init(pq)
