@@ -4,7 +4,7 @@ import "container/heap"
 
 // Interface types that can be compared
 type Interface interface {
-	Less(a Interface) bool
+	Less(a any) bool
 }
 
 // Comparabler types that can be compared, with base types(todo)
