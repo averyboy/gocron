@@ -2,9 +2,14 @@ package container
 
 import "container/heap"
 
-// Comparabler types that can be compared
+// Interface types that can be compared
+type Interface interface {
+	Less(a Interface) bool
+}
+
+// Comparabler types that can be compared, with base types(todo)
 type Comparabler interface {
-	Less(a Comparabler) bool
+	Interface
 }
 
 // PriorityQueue priority queue based container/heap
