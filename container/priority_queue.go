@@ -1,6 +1,9 @@
 package container
 
-import "container/heap"
+import (
+	"container/heap"
+	"sync"
+)
 
 // Interface types that can be compared
 type Interface interface {
@@ -16,6 +19,7 @@ type Comparabler interface {
 type PriorityQueue struct {
 	queue []Comparabler
 	self  *PriorityQueue
+	sync.RWMutex
 }
 
 // InitPq initial a priority queue instance
@@ -51,28 +55,55 @@ func (pq *PriorityQueue) Push(x interface{}) {
 func (pq *PriorityQueue) Pop() interface{} {
 	n := len(pq.queue)
 	x := pq.queue[n-1]
-	pq.queue[n-1] = nil
+	// pq.queue[n-1] = nil
 	pq.queue = pq.queue[:n-1]
 	return x
 }
 
 // Pushx push a element into priority queue
 func (pq *PriorityQueue) Pushx(x Comparabler) {
+	pq.Lock()
+	defer pq.Unlock()
 	heap.Push(pq.self, x)
 }
 
 // Popx pop a element from priority queue, removes and returns the top element
 func (pq *PriorityQueue) Popx() (x Comparabler) {
+	pq.Lock()
+	defer pq.Unlock()
 	x = heap.Pop(pq.self).(Comparabler)
+	return x
+}
+
+// Update update priority queue elem by id
+func (pq *PriorityQueue) Update(id int, x Comparabler) {
+	pq.Lock()
+	defer pq.Unlock()
+	pq.queue[id] = x
+	heap.Fix(pq.self, id)
+}
+
+// Remove remove from priority queue by id
+func (pq *PriorityQueue) Remove(id int) (x Comparabler) {
+	pq.Lock()
+	defer pq.Unlock()
+	x = heap.Remove(pq.self, id).(Comparabler)
 	return x
 }
 
 // Top returns the top element but don't remove
 func (pq *PriorityQueue) Topx() (x Comparabler) {
+	pq.RLock()
+	defer pq.RUnlock()
+	if len(pq.queue) == 0 {
+		return nil
+	}
 	return pq.queue[len(pq.queue)-1]
 }
 
 // Empty
 func (pq *PriorityQueue) Empty() bool {
+	pq.RLock()
+	defer pq.RUnlock()
 	return len(pq.queue) == 0
 }
