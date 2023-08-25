@@ -1,5 +1,9 @@
 package container
 
+import (
+	"golang.org/x/exp/constraints"
+)
+
 // Signed is a constraint that permits any signed integer type.
 type Signed interface {
 	~int | ~int8 | ~int16 | ~int32 | ~int64
@@ -27,5 +31,5 @@ type String interface {
 
 // InnerType all golang base type
 type InnerType interface {
-	Integer | Float | String
+	constraints.Float | constraints.Integer | String
 }
